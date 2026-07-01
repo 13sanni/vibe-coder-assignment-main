@@ -14,7 +14,7 @@ export function SearchPage() {
   const filtered = filterProfiles(allProfiles, searchQuery);
 
   const handleProfileClick = (username: string) => {
-    setClickCount(clickCount + 1);
+    setClickCount((prev) => prev + 1);
     console.log("Clicked profile:", username, "total clicks:", clickCount);
   };
 
