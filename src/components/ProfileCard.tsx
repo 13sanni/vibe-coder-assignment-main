@@ -31,7 +31,7 @@ export function ProfileCard({
       className="flex items-center gap-3 p-3 border border-gray-300 mb-2 cursor-pointer hover:bg-gray-50 w-[700px]"
       data-search={searchQuery}
     >
-      <img src={profile.picture} className="w-12 h-12 rounded-full" />
+      <img src={profile.picture} alt={`${profile.fullname} profile`} className="w-12 h-12 rounded-full" />
       <div className="text-left flex-1">
         <div className="font-bold">
           @{profile.username}

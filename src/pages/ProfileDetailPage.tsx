@@ -75,6 +75,7 @@ export function ProfileDetailPage() {
       <div className="flex gap-6 items-start text-left max-w-2xl mx-auto">
         <img
           src={user.picture}
+          alt={`${user.fullname} profile`}
           className="w-24 h-24 rounded-full border"
         />
         <div className="flex-1">
