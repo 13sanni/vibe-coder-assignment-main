@@ -16,6 +16,7 @@ interface ListStore {
   profiles: ListProfile[];
   addProfile: (profile: UserProfileSummary, platform: Platform) => void;
   removeProfile: (user_id: string) => void;
+  reorderProfiles: (fromIndex: number, toIndex: number) => void;
   isInList: (user_id: string) => boolean;
 }
 
@@ -50,6 +51,15 @@ export const useListStore = create<ListStore>()(
         set((state) => ({
           profiles: state.profiles.filter((p) => p.user_id !== user_id),
         }));
+      },
+
+      reorderProfiles: (fromIndex, toIndex) => {
+        set((state) => {
+          const updated = [...state.profiles];
+          const [moved] = updated.splice(fromIndex, 1);
+          updated.splice(toIndex, 0, moved);
+          return { profiles: updated };
+        });
       },
 
       isInList: (user_id) => {
