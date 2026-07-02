@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { Platform } from "@/types";
 import { Layout } from "@/components/Layout";
 import { PlatformFilter } from "@/components/PlatformFilter";
@@ -14,10 +14,10 @@ export function SearchPage() {
   const allProfiles = useMemo(() => extractProfiles(platform), [platform]);
   const filtered = useMemo(() => filterProfiles(allProfiles, searchQuery), [allProfiles, searchQuery]);
 
-  const handleProfileClick = (username: string) => {
+  const handleProfileClick = useCallback((username: string) => {
     setClickCount((prev) => prev + 1);
-    console.log("Clicked profile:", username, "total clicks:", clickCount);
-  };
+    console.log("Clicked profile:", username);
+  }, []);
 
   return (
     <Layout title="Find Influencers">
