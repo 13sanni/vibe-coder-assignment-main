@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Platform, UserProfileSummary } from "@/types";
 import { formatFollowers } from "@/utils/formatters";
@@ -13,7 +14,7 @@ interface ProfileCardProps {
 
 
 
-export function ProfileCard({
+export const ProfileCard = memo(function ProfileCard({
   profile,
   platform,
   searchQuery,
@@ -63,4 +64,4 @@ export function ProfileCard({
       </button>
     </div>
   );
-}
+});
