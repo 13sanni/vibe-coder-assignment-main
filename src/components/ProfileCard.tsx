@@ -41,7 +41,6 @@ export function ProfileCard({
         <div className="text-sm">{formatFollowers(profile.followers)} followers</div>
       </div>
       {/* TODO: candidates must implement Add to List feature */}
-      {/* TODO: candidates must implement Add to List feature */}
       <button
         disabled
         className="px-3 py-1 bg-gray-300 text-gray-500 text-sm rounded cursor-not-allowed"
