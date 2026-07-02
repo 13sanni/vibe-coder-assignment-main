@@ -3,6 +3,7 @@ import type { Platform } from "@/types";
 import { Layout } from "@/components/Layout";
 import { PlatformFilter } from "@/components/PlatformFilter";
 import { ProfileList } from "@/components/ProfileList";
+import { SelectedList } from "@/components/SelectedList";
 import { extractProfiles, filterProfiles } from "@/utils/dataHelpers";
 
 export function SearchPage() {
@@ -44,6 +45,10 @@ export function SearchPage() {
         searchQuery={searchQuery}
         onProfileClick={handleProfileClick}
       />
+
+      <div className="mt-6 w-[700px]">
+        <SelectedList />
+      </div>
     </Layout>
   );
 }
