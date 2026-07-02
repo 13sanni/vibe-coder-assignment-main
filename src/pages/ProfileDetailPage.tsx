@@ -24,10 +24,18 @@ export function ProfileDetailPage() {
   useEffect(() => {
     if (!username) return;
 
+    let cancelled = false;
+
     loadProfileByUsername(username).then((data) => {
-      setProfileData(data);
-      setLoaded(true);
+      if (!cancelled) {
+        setProfileData(data);
+        setLoaded(true);
+      }
     });
+
+    return () => {
+      cancelled = true;
+    };
   }, [username]);
 
   if (!username) {
