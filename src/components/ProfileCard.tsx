@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import type { Platform, UserProfileSummary } from "@/types";
 import { formatFollowers } from "@/utils/formatters";
+import { useListStore } from "@/store/useListStore";
 import { VerifiedBadge } from "./VerifiedBadge";
 
 interface ProfileCardProps {
@@ -19,6 +20,8 @@ export function ProfileCard({
   onProfileClick,
 }: ProfileCardProps) {
   const navigate = useNavigate();
+  const { addProfile, removeProfile, isInList } = useListStore();
+  const added = isInList(profile.user_id);
 
   const handleClick = () => {
     if (onProfileClick) onProfileClick(profile.username);
@@ -42,11 +45,21 @@ export function ProfileCard({
       </div>
       {/* TODO: candidates must implement Add to List feature */}
       <button
-        disabled
-        className="px-3 py-1 bg-gray-300 text-gray-500 text-sm rounded cursor-not-allowed"
-        onClick={(e) => e.stopPropagation()}
+        className={`px-3 py-1 text-sm rounded ${
+          added
+            ? "bg-red-100 text-red-600 hover:bg-red-200"
+            : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+        }`}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (added) {
+            removeProfile(profile.user_id);
+          } else {
+            addProfile(profile, platform);
+          }
+        }}
       >
-        Add to List
+        {added ? "Remove" : "Add to List"}
       </button>
     </div>
   );
