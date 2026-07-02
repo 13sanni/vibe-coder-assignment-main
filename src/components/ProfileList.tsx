@@ -15,8 +15,19 @@ export function ProfileList({
   onProfileClick,
 }: ProfileListProps) {
   return (
-    <div className="flex flex-col items-center">
-      {profiles.length === 0 && <p>No profiles found</p>}
+    <div className="flex flex-col gap-3">
+      {profiles.length === 0 && (
+        <div
+          className="text-center py-10 text-sm rounded-xl"
+          style={{
+            color: "var(--text)",
+            background: "var(--card-bg)",
+            border: "1px dashed var(--border)",
+          }}
+        >
+          No profiles found matching your search.
+        </div>
+      )}
       {profiles.map((profile) => (
         <ProfileCard
           key={profile.user_id}

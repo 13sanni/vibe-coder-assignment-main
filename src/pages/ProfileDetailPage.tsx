@@ -46,7 +46,14 @@ export function ProfileDetailPage() {
   if (!loaded) {
     return (
       <Layout title={`@${username}`}>
-        <p className="text-gray-400">Loading...</p>
+        <div className="flex items-center justify-center py-20">
+          <div
+            className="text-sm animate-pulse"
+            style={{ color: "var(--text)" }}
+          >
+            Loading profile...
+          </div>
+        </div>
       </Layout>
     );
   }
@@ -54,126 +61,166 @@ export function ProfileDetailPage() {
   if (!profileData) {
     return (
       <Layout title={`@${username}`}>
-        <p className="text-red-600 mb-4">
-          Could not load profile details for {username}
-        </p>
-        <Link to="/" className="text-blue-600 underline">
-          Back to search
-        </Link>
+        <div
+          className="text-center py-10 rounded-xl"
+          style={{
+            background: "var(--card-bg)",
+            border: "1px solid var(--border)",
+          }}
+        >
+          <p className="text-red-500 mb-3">
+            Could not load profile details for <strong>{username}</strong>
+          </p>
+          <Link
+            to="/"
+            className="text-sm"
+            style={{ color: "var(--accent)" }}
+          >
+            ← Back to search
+          </Link>
+        </div>
       </Layout>
     );
   }
 
   const user: FullUserProfile = profileData.data.user_profile;
+  const added = isInList(user.user_id);
+
+  const stats = [
+    { label: "Followers", value: formatFollowers(user.followers) },
+    { label: "Engagement Rate", value: formatEngagementRate(user.engagement_rate) },
+    ...(user.posts_count !== undefined
+      ? [{ label: "Posts", value: String(user.posts_count) }]
+      : []),
+    ...(user.avg_likes !== undefined
+      ? [{ label: "Avg Likes", value: formatFollowers(user.avg_likes) }]
+      : []),
+    ...(user.avg_comments !== undefined
+      ? [{ label: "Avg Comments", value: String(user.avg_comments) }]
+      : []),
+    ...(user.avg_views !== undefined && user.avg_views > 0
+      ? [{ label: "Avg Views", value: formatFollowers(user.avg_views) }]
+      : []),
+    ...(user.engagements !== undefined
+      ? [{ label: "Engagements", value: formatFollowers(user.engagements) }]
+      : []),
+  ];
 
   return (
     <Layout title={user.fullname}>
-      <Link to="/" className="text-sm text-blue-600 mb-4 inline-block">
+      <Link
+        to="/"
+        className="text-sm mb-5 inline-block no-underline"
+        style={{ color: "var(--accent)" }}
+      >
         ← Back to search
       </Link>
 
-      <div className="flex gap-6 items-start text-left max-w-2xl mx-auto">
-        <img
-          src={user.picture}
-          alt={`${user.fullname} profile`}
-          className="w-24 h-24 rounded-full border"
-        />
-        <div className="flex-1">
-          <h2 className="text-xl font-bold">
-            @{user.username}
-            <VerifiedBadge verified={user.is_verified} />
-          </h2>
-          <p className="text-gray-600">{user.fullname}</p>
-          <p className="text-xs text-gray-400 mt-1">Platform: {platform}</p>
+      <div
+        className="rounded-xl p-6 max-w-2xl"
+        style={{
+          background: "var(--card-bg)",
+          border: "1px solid var(--border)",
+          boxShadow: "var(--shadow-sm)",
+        }}
+      >
+        <div className="flex gap-5 items-start">
+          <img
+            src={user.picture}
+            alt={`${user.fullname} profile`}
+            className="w-20 h-20 rounded-full object-cover"
+            style={{ border: "3px solid var(--border)" }}
+          />
+          <div className="flex-1">
+            <h2 className="text-lg font-bold" style={{ color: "var(--text-h)" }}>
+              @{user.username ?? "unknown"}
+              <VerifiedBadge verified={user.is_verified} />
+            </h2>
+            <p className="text-sm" style={{ color: "var(--text)" }}>
+              {user.fullname}
+            </p>
+            <p
+              className="text-xs mt-1 px-2 py-0.5 rounded-full inline-block"
+              style={{
+                background: "var(--accent-bg)",
+                color: "var(--accent)",
+              }}
+            >
+              {platform}
+            </p>
 
-          {user.description && (
-            <p className="mt-3 text-sm text-gray-700">{user.description}</p>
-          )}
-
-          <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-            <div className="border p-2 rounded">
-              <div className="text-gray-500">Followers</div>
-              <div className="font-semibold">
-                {formatFollowers(user.followers)}
-              </div>
-            </div>
-            <div className="border p-2 rounded">
-              <div className="text-gray-500">Engagement Rate</div>
-              <div className="font-semibold">
-                {formatEngagementRate(user.engagement_rate)}
-              </div>
-            </div>
-            {user.posts_count !== undefined && (
-              <div className="border p-2 rounded">
-                <div className="text-gray-500">Posts</div>
-                <div className="font-semibold">{user.posts_count}</div>
-              </div>
-            )}
-            {user.avg_likes !== undefined && (
-              <div className="border p-2 rounded">
-                <div className="text-gray-500">Avg Likes</div>
-                <div className="font-semibold">
-                  {formatFollowers(user.avg_likes)}
-                </div>
-              </div>
-            )}
-            {user.avg_comments !== undefined && (
-              <div className="border p-2 rounded">
-                <div className="text-gray-500">Avg Comments</div>
-                <div className="font-semibold">{user.avg_comments}</div>
-              </div>
-            )}
-            {user.avg_views !== undefined && user.avg_views > 0 && (
-              <div className="border p-2 rounded">
-                <div className="text-gray-500">Avg Views</div>
-                <div className="font-semibold">
-                  {formatFollowers(user.avg_views)}
-                </div>
-              </div>
-            )}
-            {user.engagements !== undefined && (
-              <div className="border p-2 rounded">
-                <div className="text-gray-500">Engagements</div>
-                <div className="font-semibold">
-                  {formatFollowers(user.engagements)}
-                </div>
-              </div>
+            {user.description && (
+              <p
+                className="mt-3 text-sm leading-relaxed"
+                style={{ color: "var(--text)" }}
+              >
+                {user.description}
+              </p>
             )}
           </div>
+        </div>
+
+        {/* Stats grid */}
+        <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="p-3 rounded-lg text-center"
+              style={{
+                background: "var(--bg)",
+                border: "1px solid var(--border)",
+              }}
+            >
+              <div className="text-xs" style={{ color: "var(--text)" }}>
+                {stat.label}
+              </div>
+              <div
+                className="text-base font-bold mt-0.5"
+                style={{ color: "var(--text-h)" }}
+              >
+                {stat.value}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Action buttons */}
+        <div className="mt-5 flex gap-3 items-center">
+          <button
+            className="px-4 py-2 text-sm font-medium rounded-lg cursor-pointer"
+            style={{
+              background: added ? "rgba(239, 68, 68, 0.08)" : "var(--accent)",
+              color: added ? "#ef4444" : "#fff",
+              border: added
+                ? "1px solid rgba(239, 68, 68, 0.3)"
+                : "1px solid var(--accent)",
+            }}
+            onClick={() => {
+              if (added) {
+                removeProfile(user.user_id);
+              } else {
+                addProfile(user, platform);
+              }
+            }}
+          >
+            {added ? "✕ Remove from List" : "+ Add to List"}
+          </button>
 
           {user.url && (
             <a
               href={user.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block mt-4 text-blue-600 text-sm"
+              className="px-4 py-2 text-sm font-medium rounded-lg no-underline"
+              style={{
+                background: "var(--bg)",
+                color: "var(--text-h)",
+                border: "1px solid var(--border)",
+              }}
             >
               View on platform →
             </a>
           )}
-
-          {/* TODO: candidates must implement Add to List feature */}
-          {(() => {
-            const added = isInList(user.user_id);
-            return (
-              <button
-                className={`block mt-4 px-4 py-2 rounded ${
-                  added
-                    ? "bg-red-100 text-red-600 hover:bg-red-200"
-                    : "bg-blue-100 text-blue-600 hover:bg-blue-200"
-                }`}
-                onClick={() => {
-                  if (added) {
-                    removeProfile(user.user_id);
-                  } else {
-                    addProfile(user, platform);
-                  }
-                }}
-              >
-                {added ? "Remove from List" : "Add to List"}
-              </button>
-            );
-          })()}
         </div>
       </div>
     </Layout>

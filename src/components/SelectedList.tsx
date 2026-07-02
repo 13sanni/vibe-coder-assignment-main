@@ -15,26 +15,55 @@ export function SelectedList() {
 
   if (profiles.length === 0) {
     return (
-      <div className="border border-dashed border-gray-300 rounded p-6 text-center text-gray-400 text-sm">
-        No profiles selected yet. Click "Add to List" on any profile to get
-        started.
+      <div
+        className="rounded-xl p-6 text-center text-sm"
+        style={{
+          background: "var(--card-bg)",
+          border: "1px dashed var(--border)",
+          color: "var(--text)",
+        }}
+      >
+        <div className="text-2xl mb-2">📋</div>
+        No profiles selected yet.
+        <br />
+        Click <strong>"+ Add to List"</strong> to get started.
       </div>
     );
   }
 
   return (
-    <div className="border border-gray-200 rounded">
-      <div className="flex justify-between items-center px-4 py-3 border-b border-gray-200 bg-gray-50">
-        <h3 className="font-semibold text-sm">
-          Selected Profiles ({profiles.length})
+    <div
+      className="rounded-xl overflow-hidden"
+      style={{
+        background: "var(--card-bg)",
+        border: "1px solid var(--border)",
+        boxShadow: "var(--shadow-sm)",
+      }}
+    >
+      <div
+        className="flex justify-between items-center px-4 py-3"
+        style={{ borderBottom: "1px solid var(--border)" }}
+      >
+        <h3
+          className="font-semibold text-sm"
+          style={{ color: "var(--text-h)" }}
+        >
+          📋 My List ({profiles.length})
         </h3>
-        <span className="text-xs text-gray-400">Drag to reorder</span>
+        <span className="text-xs" style={{ color: "var(--text)" }}>
+          Drag to reorder
+        </span>
       </div>
 
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="selected-profiles">
           {(provided) => (
-            <ul ref={provided.innerRef} {...provided.droppableProps}>
+            <ul
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className="m-0 p-0"
+              style={{ listStyle: "none" }}
+            >
               {profiles.map((profile, index) => (
                 <Draggable
                   key={profile.user_id}
@@ -46,31 +75,56 @@ export function SelectedList() {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      className={`flex items-center gap-3 px-4 py-3 border-b border-gray-100 last:border-b-0 ${
-                        snapshot.isDragging ? "bg-blue-50 shadow-md" : ""
-                      }`}
+                      className="flex items-center gap-3 px-4 py-3"
+                      style={{
+                        ...provided.draggableProps.style,
+                        borderBottom: "1px solid var(--border)",
+                        background: snapshot.isDragging
+                          ? "var(--accent-bg)"
+                          : "transparent",
+                        boxShadow: snapshot.isDragging
+                          ? "var(--shadow-lg)"
+                          : "none",
+                        borderRadius: snapshot.isDragging ? "8px" : "0",
+                      }}
                     >
-                      <span className="text-gray-300 cursor-grab">⠿</span>
+                      <span
+                        className="cursor-grab text-sm"
+                        style={{ color: "var(--border)" }}
+                      >
+                        ⠿
+                      </span>
                       <img
                         src={profile.picture}
                         alt={`${profile.fullname} profile`}
-                        className="w-10 h-10 rounded-full"
+                        className="w-9 h-9 rounded-full object-cover"
+                        style={{ border: "1px solid var(--border)" }}
                       />
-                      <div className="flex-1 text-left">
-                        <div className="text-sm font-semibold">
-                          @{profile.username}
+                      <div className="flex-1 text-left min-w-0">
+                        <div
+                          className="text-xs font-semibold truncate"
+                          style={{ color: "var(--text-h)" }}
+                        >
+                          @{profile.username ?? "unknown"}
                           <VerifiedBadge verified={profile.is_verified} />
                         </div>
-                        <div className="text-xs text-gray-500">
-                          {formatFollowers(profile.followers)} followers ·{" "}
-                          {profile.platform}
+                        <div
+                          className="text-xs truncate"
+                          style={{ color: "var(--text)" }}
+                        >
+                          {formatFollowers(profile.followers)} · {profile.platform}
                         </div>
                       </div>
                       <button
                         onClick={() => removeProfile(profile.user_id)}
-                        className="text-xs text-red-500 hover:text-red-700 hover:bg-red-50 px-2 py-1 rounded"
+                        className="text-xs px-2 py-1 rounded-md cursor-pointer"
+                        style={{
+                          color: "#ef4444",
+                          background: "rgba(239, 68, 68, 0.08)",
+                          border: "none",
+                        }}
                       >
-                        Remove
+                        ✕
                       </button>
                     </li>
                   )}
