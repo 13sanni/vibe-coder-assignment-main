@@ -12,8 +12,6 @@ interface ProfileCardProps {
   onProfileClick?: (username: string) => void;
 }
 
-
-
 export const ProfileCard = memo(function ProfileCard({
   profile,
   platform,
